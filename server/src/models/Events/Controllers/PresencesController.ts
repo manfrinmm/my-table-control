@@ -85,13 +85,13 @@ export default class PresencesController {
     const { presence_id } = req.params;
 
     try {
-      const presence = await prisma.presence.delete({
+      await prisma.presence.delete({
         where: {
           id: Number(presence_id),
         },
       });
 
-      return res.json(presence);
+      return res.json();
     } catch (error) {
       return res.status(400).json({ message: "Nome não encontrado" });
     }

@@ -12,7 +12,6 @@ interface IRequest {
 interface IResponse {
   token: string;
   user: {
-    name: string;
     email: string;
   };
 }
@@ -42,7 +41,6 @@ export default class AuthenticateUserService {
 
     return {
       user: {
-        name: user.name,
         email: user.email,
       },
       token,
