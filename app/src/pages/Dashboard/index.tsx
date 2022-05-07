@@ -1,11 +1,12 @@
-import { PlusIcon } from "@heroicons/react/outline";
-import { Form } from "@unform/web";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import Input from "../../components/form/Input";
-import Loading from "../../components/Loading";
 
+import { LogoutIcon } from "@heroicons/react/outline";
+
+import logo from "../../assets/logo.svg";
+import Loading from "../../components/Loading";
+import { useAuth } from "../../hooks/auth";
 import api from "../../services/api";
 import handleMessageError from "../../utils/handleMessageError";
 import styles from "./styles.module.css";
@@ -31,6 +32,7 @@ export default function Dashboard() {
   const history = useHistory();
   const [tables, setTables] = useState<ITableType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { signOut } = useAuth();
 
   useEffect(() => {
     async function loadTables() {
@@ -50,8 +52,33 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col">
+      <div className="flex items-center mb-4">
+        <img className="h-12" src={logo} alt="Workflow" />
+
+        <div className="ml-auto">
+          <button
+            type="button"
+            onClick={signOut}
+            className="
+            py-2 px-4
+            border-2 border-amber-500 text-amber-200
+            font-bold
+            text-base
+            flex items-center
+            rounded-lg
+          hover:bg-amber-600
+          hover:text-white
+            transition"
+          >
+            <LogoutIcon width={24} className="mr-2" />
+            Sair
+          </button>
+        </div>
+      </div>
+
       <header className={styles.header}>
         <button
+          type="button"
           onClick={() => {
             history.push("/tables");
           }}
@@ -61,6 +88,7 @@ export default function Dashboard() {
         </button>
 
         <button
+          type="button"
           className="text-amber-700 border border-amber-700 hover:bg-amber-800 hover:text-white"
           onClick={() => {
             history.push("/presences");
@@ -74,12 +102,12 @@ export default function Dashboard() {
         <h2 className="m-4 text-2xl text-center">Cadastro de mesas</h2>
 
         {isLoading ? (
-          <Loading className="" />
+          <Loading />
         ) : (
           <section className={styles.tables}>
-            {tables.map((table) => (
+            {tables.map(table => (
               <Link
-                to={`tables/${table.id}`}
+                to={`tables?table=${table.id}`}
                 className={styles.table}
                 key={table.id}
               >
@@ -96,7 +124,10 @@ export default function Dashboard() {
                 <div>
                   <span>Acompanhantes: </span>
                   <strong>
-                    {table._count.presences}/{table.capacity}
+                    {table._count.presences > 0
+                      ? table._count.presences - 1
+                      : 0}
+                    /{table.capacity}
                   </strong>
                 </div>
               </Link>

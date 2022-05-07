@@ -1,0 +1,7 @@
+.presences {
+  @apply flex flex-col space-y-5;
+}
+
+.presence div div span {
+  @apply mr-1;
+}

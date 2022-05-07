@@ -1,12 +1,7 @@
-import { AxiosError } from "axios";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { toast } from "react-toastify";
+
+import { AxiosError } from "axios";
 
 import api from "../services/api";
 import handleMessageError from "../utils/handleMessageError";
@@ -30,7 +25,7 @@ export default function AuthProvider({ children }: any) {
     api.defaults.headers.common.authorization = `Bearer ${token}`;
 
     api.interceptors.response.use(
-      (response) => {
+      response => {
         return response;
       },
       (error: AxiosError) => {
@@ -54,8 +49,6 @@ export default function AuthProvider({ children }: any) {
 
     return false;
   });
-
-  useEffect(() => {}, []);
 
   const signIn = useCallback(async ({ email, password }: ISignCredentials) => {
     const toastId = toast.info("Fazendo login...", { autoClose: false });

@@ -27,10 +27,7 @@ export default function Input({
   return (
     <div className={`rounded-md shadow-sm -space-y-px ${containerStyle}`}>
       <div>
-        <label htmlFor={fieldName} className="">
-          {/* sr-only */}
-          {label}
-        </label>
+        <label htmlFor={fieldName}>{label}</label>
         <input
           id={fieldName}
           name={fieldName}
@@ -46,7 +43,8 @@ export default function Input({
             placeholder-gray-500 text-gray-900
             rounded-md
             focus:outline-none focus:ring-slate-500 focus:border-slate-500
-            focus:z-10 sm:text-sm
+            focus:z-10
+            text-base
             ${className}
           `)}
           {...rest}

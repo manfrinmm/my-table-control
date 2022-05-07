@@ -1,5 +1,5 @@
 import { AuthProvider } from "./auth";
 
-export default function AppProvider(props: any) {
-  return <AuthProvider>{props.children}</AuthProvider>;
+export default function AppProvider({ children }: any) {
+  return <AuthProvider>{children}</AuthProvider>;
 }

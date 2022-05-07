@@ -1,4 +1,5 @@
 import Lottie from "react-lottie";
+
 import { overrideTailwindClasses } from "tailwind-override";
 
 import loadingFile from "../../assets/loading.json";

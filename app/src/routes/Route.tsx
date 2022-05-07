@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Redirect,
   Route as ReactDOMRoute,
@@ -12,7 +11,7 @@ interface IRouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
 }
 
-const Route: React.FC<IRouteProps> = ({ isPrivate, ...rest }) => {
+export default function Route({ isPrivate, ...rest }: IRouteProps) {
   const { isSigned } = useAuth();
 
   if (isSigned && !isPrivate) {
@@ -28,6 +27,4 @@ const Route: React.FC<IRouteProps> = ({ isPrivate, ...rest }) => {
       <ReactDOMRoute {...rest} />
     </DefaultLayout>
   );
-};
-
-export default Route;
+}

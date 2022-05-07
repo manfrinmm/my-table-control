@@ -1,18 +1,18 @@
-import { Form } from "@unform/web";
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import { ChevronLeftIcon } from "@heroicons/react/outline";
 import { FormHandles } from "@unform/core";
-import Lottie from "react-lottie";
+import { Form } from "@unform/web";
 
-import Input from "../components/form/Input";
-import Modal from "../components/Modal";
-import api from "../services/api";
-import formatDate from "../utils/formatDate";
-import handleMessageError from "../utils/handleMessageError";
-import loadingFile from "../assets/loading.json";
-import Loading from "../components/Loading";
+import Input from "../../components/form/Input";
+import Loading from "../../components/Loading";
+import Modal from "../../components/Modal";
+import api from "../../services/api";
+import formatDate from "../../utils/formatDate";
+import handleMessageError from "../../utils/handleMessageError";
+import styles from "./styles.module.css";
 
 type IPresenceType = {
   id: number;
@@ -47,11 +47,13 @@ export default function Presences() {
         `/events/${event_id}/presences/${presenceId}`,
       );
 
-      toast.success("Presença confirmada!");
+      toast.success("Presença confirmada!", {
+        toastId: "PRESENCE_CONFIRMATION",
+      });
       setModalIsOpen(false);
       setPresenceId(0);
-      setPresences((state) =>
-        state.map((presence) => {
+      setPresences(state =>
+        state.map(presence => {
           if (presence.id === presenceId) {
             return { ...presence, arrived_at: response.data.arrived_at };
           }
@@ -65,9 +67,9 @@ export default function Presences() {
   }, [presenceId]);
 
   const handleSubmit = useCallback(async (data: any) => {
-    console.log(data);
     setIsLoading(true);
     setPresences([]);
+
     try {
       const response = await api.get(`/events/${event_id}/presences`, {
         params: data,
@@ -86,7 +88,23 @@ export default function Presences() {
   return (
     <div className="flex flex-col">
       <header className="flex flex-col">
-        <Link to="/dashboard" className="flex items-center mb-4">
+        {/* <Link to="/dashboard" className="flex items-center mb-4"> */}
+        <Link
+          to="/dashboard"
+          className="
+            p-2
+            border-2 border-amber-500 text-amber-200
+            font-bold
+            text-base
+            flex items-center
+            rounded-lg
+          hover:bg-amber-600
+          hover:text-white
+            transition
+            mr-auto
+            mb-4
+            "
+        >
           <ChevronLeftIcon width={20} />
           <p>Voltar</p>
         </Link>
@@ -101,7 +119,10 @@ export default function Presences() {
             className="text-lg"
           />
 
-          <button className="w-full py-2 px-4 mt-4 border border-transparent text-xl font-medium rounded-md text-white bg-amber-700 hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+          <button
+            type="button"
+            className="w-full py-2 px-4 mt-4 border border-transparent text-xl font-medium rounded-md text-white bg-amber-700 hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+          >
             Buscar
           </button>
         </Form>
@@ -109,17 +130,15 @@ export default function Presences() {
 
       <main className="flex flex-col text-center mt-16">
         {isLoading ? (
-          <div className="m-auto w-24">
-            <Loading />
-
-            <p className="text-lg italic">Carregando...</p>
-          </div>
+          <Loading />
         ) : (
-          <section className="flex flex-col space-y-5">
-            {presences.map((presence) => (
+          <section className={styles.presences}>
+            {presences.map(presence => (
               <button
+                type="button"
                 key={presence.id}
-                className="flex flex-col justify-center bg-zinc-800 rounded-lg p-2 disabled:bg-zinc-900"
+                // className={styles.presence}
+                className={`flex flex-col justify-center bg-zinc-800 rounded-lg p-2 disabled:bg-zinc-900 ${styles.presence}`}
                 onClick={() => {
                   handleModalPresenceConfirmation(presence);
                 }}
@@ -139,11 +158,11 @@ export default function Presences() {
                   </div>
 
                   <div className="flex items-center">
-                    <span className="mr-1">Status:</span>
+                    <span>Status:</span>
                     <strong>
                       {presence.arrived_at ? (
                         <p className="flex flex-col text-center">
-                          <span>Chegou as </span>
+                          <span>Chegou as</span>
                           <span>{formatDate(presence.arrived_at, true)}</span>
                         </p>
                       ) : (
@@ -174,13 +193,15 @@ export default function Presences() {
           <strong>Convidado</strong>
 
           <button
+            type="button"
             className="mt-4 w-full bg-amber-700 p-2 rounded-lg font-semibold hover:bg-amber-800 transition"
             onClick={handleSetPresenceConfirmation}
           >
             Marcar Presença
           </button>
           <button
-            className="mt-6 bg-stone-400 p-2 rounded"
+            type="button"
+            className="mt-6 bg-stone-700 p-2 rounded text-stone-200"
             onClick={() => {
               setModalIsOpen(false);
             }}
