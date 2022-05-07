@@ -4,19 +4,26 @@ import { prisma } from "../../../../database/prismaClient";
 export default class PresencesController {
   async index(req: Request, res: Response) {
     const { search } = req.query;
+    const { event_id } = req.params;
 
     var presences = [];
 
     if (Number(search) > 0) {
       presences = await prisma.presence.findMany({
         where: {
-          table_id: Number(search),
+          table: {
+            number: Number(search),
+            // event_id: Number(event_id),
+          },
+        },
+        orderBy: {
+          arrived_at: "desc",
         },
         include: {
           table: {
-            select: {
-              number: true,
-            },
+            // select: {
+            //   number: true,
+            // },
           },
         },
       });
@@ -33,19 +40,25 @@ export default class PresencesController {
             contains: String(search),
             mode: "insensitive",
           },
+          table: {
+            event_id: Number(event_id),
+          },
+        },
+        orderBy: {
+          arrived_at: "desc",
         },
         include: {
           table: {
-            select: {
-              number: true,
-            },
+            // select: {
+            //   number: true,
+            // },
           },
         },
       });
 
       if (presences.length === 0) {
         return res.status(400).json({
-          message: "Nome não encontrada!",
+          message: "Nome não encontrado!",
         });
       }
     }

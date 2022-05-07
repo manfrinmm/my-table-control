@@ -1,0 +1,17 @@
+.modal {
+  /* @apply bg-slate-600; */
+  @apply flex flex-col items-center;
+  @apply p-8 m-8;
+  @apply rounded-lg;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  @apply flex flex-col items-center justify-center;
+  @apply bg-stone-900 bg-opacity-90;
+}

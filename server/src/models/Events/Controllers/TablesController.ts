@@ -3,20 +3,54 @@ import { prisma } from "../../../../database/prismaClient";
 
 export default class TablesController {
   async index(req: Request, res: Response) {
-    const events = await prisma.table.findMany({
+    const { event_id } = req.params;
+
+    const event = await prisma.event.findFirst({
+      where: {
+        id: Number(event_id),
+      },
       include: {
-        _count: true,
-        presences: {
-          select: {
-            person_name: true,
-            type: true,
+        tables: {
+          orderBy: {
+            number: "asc",
           },
-          take: 1,
+          include: {
+            _count: true,
+            presences: {
+              select: {
+                person_name: true,
+                type: true,
+              },
+              take: 1,
+            },
+          },
         },
       },
     });
 
-    return res.json(events);
+    if (!event) {
+      return res.status(400).json({
+        message: "Evento não encontrado.",
+      });
+    }
+
+    // const events = await prisma.table.findMany({
+    //   where: {
+    //     event_id: Number(event_id),
+    //   },
+    //   include: {
+    //     _count: true,
+    //     presences: {
+    //       select: {
+    //         person_name: true,
+    //         type: true,
+    //       },
+    //       take: 1,
+    //     },
+    //   },
+    // });
+
+    return res.json(event.tables);
   }
 
   async store(req: Request, res: Response) {
