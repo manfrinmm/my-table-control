@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../../database/prismaClient";
+import { prisma } from "../../../database/prismaClient";
 
 export default class EventsController {
   async index(req: Request, res: Response) {

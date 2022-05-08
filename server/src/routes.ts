@@ -5,6 +5,9 @@ import UsersController from "./models/Users/Controllers/UsersController";
 import EventsController from "./models/Events/Controllers/EventsController";
 import PresencesController from "./models/Events/Controllers/PresencesController";
 import TablesController from "./models/Events/Controllers/TablesController";
+import ImportsController from "./models/Events/Controllers/ImportsController";
+import multer from "multer";
+import uploadConfig from "./config/multer";
 
 const routes = Router();
 
@@ -13,11 +16,16 @@ const usersController = new UsersController();
 const eventsController = new EventsController();
 const presencesController = new PresencesController();
 const tablesController = new TablesController();
+const importsController = new ImportsController();
+
+const upload = multer(uploadConfig.multer);
 
 // Users
 routes.post("/users", usersController.store);
 
 routes.post("/sessions", sessionsController.store);
+
+routes.post("/imports", upload.single("file"), importsController.store);
 
 routes.use(ensureAuthenticated);
 

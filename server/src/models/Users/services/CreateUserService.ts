@@ -1,13 +1,11 @@
 import { User } from "@prisma/client";
 import { hash } from "bcryptjs";
-import { prisma } from "../../../../database/prismaClient";
+import { prisma } from "../../../database/prismaClient";
 import { AppError } from "../../../errors/AppError";
 
 interface IRequest {
-  name: string;
   email: string;
   password: string;
-  uid: string;
 }
 
 export default class CreateUserService {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../../database/prismaClient";
+import { prisma } from "../../../database/prismaClient";
 
 export default class PresencesController {
   async index(req: Request, res: Response) {
@@ -13,18 +13,13 @@ export default class PresencesController {
         where: {
           table: {
             number: Number(search),
-            // event_id: Number(event_id),
           },
         },
         orderBy: {
           arrived_at: "desc",
         },
         include: {
-          table: {
-            // select: {
-            //   number: true,
-            // },
-          },
+          table: {},
         },
       });
 
@@ -48,11 +43,7 @@ export default class PresencesController {
           arrived_at: "desc",
         },
         include: {
-          table: {
-            // select: {
-            //   number: true,
-            // },
-          },
+          table: {},
         },
       });
 
