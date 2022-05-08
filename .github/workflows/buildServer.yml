@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           username: ${{ secrets.SSH_USER }}
           script: |
-            cd ~/apps/my-table-control
+            cd ~/apps/my-table-control/server
             yarn --production
             yarn prisma migrate deploy
             pm2 reload api-my-table-control
