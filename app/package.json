@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
-    "@lottiefiles/react-lottie-player": "^3.4.5",
     "@unform/core": "^2.1.6",
     "@unform/web": "^2.1.6",
     "axios": "^0.27.2",
