@@ -84,7 +84,7 @@ export default function Dashboard() {
           }}
           className="text-white bg-amber-700 hover:bg-amber-800"
         >
-          Cadastrar mesa
+          Configuração de Mesas
         </button>
 
         <button
@@ -122,12 +122,9 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <span>Acompanhantes: </span>
+                  <span>Disponibilidade: </span>
                   <strong>
-                    {table._count.presences > 0
-                      ? table._count.presences - 1
-                      : 0}
-                    /{table.capacity}
+                    {table._count.presences}/{table.capacity}
                   </strong>
                 </div>
               </Link>

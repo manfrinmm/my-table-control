@@ -11,9 +11,9 @@ export default function Routes() {
     <Switch>
       <Route exact path="/" component={SignIn} />
 
+      <Route path="/presences" isPrivate component={Presences} />
       <Route path="/dashboard" isPrivate component={Dashboard} />
       <Route path="/tables" isPrivate component={Table} />
-      <Route path="/presences" isPrivate component={Presences} />
 
       <Redirect to="/" />
     </Switch>

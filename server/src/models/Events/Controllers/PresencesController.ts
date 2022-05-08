@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
+import slugify from "../../../../utils/slugify";
 import { prisma } from "../../../database/prismaClient";
 
 export default class PresencesController {
   async index(req: Request, res: Response) {
-    const { search } = req.query;
     const { event_id } = req.params;
+    const { search } = req.query;
+
+    if (!search) {
+      return res.status(400).json({ message: "Sem parâmetro de busca" });
+    }
 
     var presences = [];
 
@@ -25,14 +30,14 @@ export default class PresencesController {
 
       if (presences.length === 0) {
         return res.status(400).json({
-          message: "Mesa não encontrada!",
+          message: "Mesa não encontrada ou vazia!",
         });
       }
     } else {
       presences = await prisma.presence.findMany({
         where: {
           person_name: {
-            contains: String(search),
+            contains: slugify(String(search)),
             mode: "insensitive",
           },
           table: {

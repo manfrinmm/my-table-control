@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import slugify from "../../../../utils/slugify";
 import { prisma } from "../../../database/prismaClient";
 
 export default class TablesController {
@@ -40,7 +41,7 @@ export default class TablesController {
   }
 
   async store(req: Request, res: Response) {
-    const { persons } = req.body;
+    const { capacity, persons } = req.body;
     const { table_id } = req.params;
 
     const table = await prisma.table.findFirst({
@@ -58,8 +59,14 @@ export default class TablesController {
         id: Number(table_id),
       },
       data: {
+        capacity: Number(capacity),
         presences: {
-          createMany: { data: persons },
+          createMany: {
+            data: persons.map((person: any) => ({
+              ...person,
+              person_name: slugify(person.person_name, " ", true),
+            })),
+          },
         },
       },
       select: {

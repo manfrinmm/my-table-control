@@ -15,7 +15,7 @@ export default function Route({ isPrivate, ...rest }: IRouteProps) {
   const { isSigned } = useAuth();
 
   if (isSigned && !isPrivate) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/presences" />;
   }
 
   if (!isSigned && isPrivate) {

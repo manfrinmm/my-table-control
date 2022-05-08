@@ -17,7 +17,7 @@ import styles from "./styles.module.css";
 type IPresenceType = {
   id: number;
   person_name: string;
-  table: { number: number };
+  table: { number: number; capacity: number };
   type: "Acompanhante" | "Convidado";
   arrived_at?: string;
 };
@@ -29,6 +29,7 @@ export default function Presences() {
   const [selectedPresence, setSelectedPresence] =
     useState<IPresenceType | void>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isTableSearch, setIsTableSearch] = useState(false);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -72,6 +73,8 @@ export default function Presences() {
   const handleSubmit = useCallback(async (data: any) => {
     setIsLoading(true);
     setPresences([]);
+
+    setIsTableSearch(Number(data.search) > 0);
 
     try {
       const response = await api.get(`/events/${event_id}/presences`, {
@@ -136,11 +139,30 @@ export default function Presences() {
           <Loading />
         ) : (
           <section className={styles.presences}>
+            {isTableSearch && presences[0] && (
+              <section className="-mt-8 flex justify-center space-x-8">
+                <p>
+                  Capacidade: <strong>{presences[0].table.capacity}</strong>
+                </p>
+
+                <p>
+                  Disponibilidade:{" "}
+                  <strong>
+                    {presences[0].table.capacity - presences.length}
+                  </strong>
+                </p>
+
+                <p>
+                  Ocupado: <strong>{presences.length}</strong>
+                </p>
+              </section>
+            )}
+
             {presences.map(presence => (
               <button
                 type="button"
                 key={presence.id}
-                className={`flex flex-col justify-center bg-zinc-800 rounded-lg p-2 disabled:bg-zinc-900 ${styles.presence}`}
+                className={`flex flex-col justify-center bg-zinc-800 rounded-lg p-2 disabled:bg-emerald-800 ${styles.presence}`}
                 onClick={() => {
                   handleModalPresenceConfirmation(presence);
                 }}

@@ -21,13 +21,13 @@ const importsController = new ImportsController();
 const upload = multer(uploadConfig.multer);
 
 // Users
-routes.post("/users", usersController.store);
+// routes.post("/users", usersController.store);
 
 routes.post("/sessions", sessionsController.store);
 
-routes.post("/imports", upload.single("file"), importsController.store);
-
 routes.use(ensureAuthenticated);
+
+routes.post("/imports", upload.single("file"), importsController.store);
 
 routes.get("/events", eventsController.index);
 routes.post("/events", eventsController.store);
