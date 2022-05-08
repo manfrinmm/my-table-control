@@ -26,7 +26,8 @@ const event_id = import.meta.env.VITE_EVENT_ID;
 
 export default function Presences() {
   const [presences, setPresences] = useState<IPresenceType[]>([]);
-  const [presenceId, setPresenceId] = useState(0);
+  const [selectedPresence, setSelectedPresence] =
+    useState<IPresenceType | void>();
   const [isLoading, setIsLoading] = useState(false);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -36,7 +37,7 @@ export default function Presences() {
   const handleModalPresenceConfirmation = useCallback(
     async (presence: IPresenceType) => {
       setModalIsOpen(true);
-      setPresenceId(presence.id);
+      setSelectedPresence(presence);
     },
     [],
   );
@@ -44,17 +45,19 @@ export default function Presences() {
   const handleSetPresenceConfirmation = useCallback(async () => {
     try {
       const response = await api.put(
-        `/events/${event_id}/presences/${presenceId}`,
+        `/events/${event_id}/presences/${selectedPresence?.id}`,
       );
 
       toast.success("Presença confirmada!", {
+        autoClose: 3000,
         toastId: "PRESENCE_CONFIRMATION",
       });
       setModalIsOpen(false);
-      setPresenceId(0);
+      setSelectedPresence();
+
       setPresences(state =>
         state.map(presence => {
-          if (presence.id === presenceId) {
+          if (presence.id === selectedPresence?.id) {
             return { ...presence, arrived_at: response.data.arrived_at };
           }
 
@@ -64,7 +67,7 @@ export default function Presences() {
     } catch (error) {
       toast.error(`Erro ao confirmar presença! ${handleMessageError(error)}`);
     }
-  }, [presenceId]);
+  }, [selectedPresence]);
 
   const handleSubmit = useCallback(async (data: any) => {
     setIsLoading(true);
@@ -120,7 +123,7 @@ export default function Presences() {
           />
 
           <button
-            type="button"
+            type="submit"
             className="w-full py-2 px-4 mt-4 border border-transparent text-xl font-medium rounded-md text-white bg-amber-700 hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
           >
             Buscar
@@ -137,7 +140,6 @@ export default function Presences() {
               <button
                 type="button"
                 key={presence.id}
-                // className={styles.presence}
                 className={`flex flex-col justify-center bg-zinc-800 rounded-lg p-2 disabled:bg-zinc-900 ${styles.presence}`}
                 onClick={() => {
                   handleModalPresenceConfirmation(presence);
@@ -186,11 +188,11 @@ export default function Presences() {
       >
         <div className="bg-stone-800 p-4 w-96 rounded-lg flex flex-col items-center ">
           <p className="text-lg">Marcar presença para</p>
-          <strong className="text-lg">Matheus MM</strong>
+          <strong className="text-lg">{selectedPresence?.person_name}</strong>
           <p>
-            <span>Mesa:</span> <strong>1</strong>
+            <span>Mesa:</span> <strong>{selectedPresence?.table.number}</strong>
           </p>
-          <strong>Convidado</strong>
+          <strong>{selectedPresence?.type}</strong>
 
           <button
             type="button"
