@@ -44,14 +44,19 @@ export default function Presences() {
   );
 
   const handleSetPresenceConfirmation = useCallback(async () => {
+    const toastId = toast("Confirmando presença", {
+      autoClose: false,
+    });
+
     try {
       const response = await api.put(
         `/events/${event_id}/presences/${selectedPresence?.id}`,
       );
 
-      toast.success("Presença confirmada!", {
-        autoClose: 3000,
-        toastId: "PRESENCE_CONFIRMATION",
+      toast.update(toastId, {
+        render: "Presença confirmada!",
+        autoClose: 1000,
+        type: "success",
       });
       setModalIsOpen(false);
       setSelectedPresence();
@@ -66,7 +71,11 @@ export default function Presences() {
         }),
       );
     } catch (error) {
-      toast.error(`Erro ao confirmar presença! ${handleMessageError(error)}`);
+      toast.update(toastId, {
+        render: `Erro ao confirmar presença! ${handleMessageError(error)}`,
+        autoClose: 3000,
+        type: "error",
+      });
     }
   }, [selectedPresence]);
 
