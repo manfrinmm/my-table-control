@@ -81,6 +81,21 @@ export default class ImportsController {
       };
     });
 
+    const registerTotalTables = 200;
+    const formattedDataWithTotalTables = formattedData;
+
+    for (
+      let index = formattedData.length;
+      index < registerTotalTables;
+      index++
+    ) {
+      formattedDataWithTotalTables.push({
+        capacity: 10,
+        number: index + 1,
+        persons: [],
+      });
+    }
+
     for await (const mesa of formattedData) {
       await prisma.table.create({
         data: {
@@ -96,6 +111,8 @@ export default class ImportsController {
       });
     }
 
-    return res.json({ message: "dados cadastrados" });
+    return res.json({
+      message: "dados cadastrados",
+    });
   }
 }
