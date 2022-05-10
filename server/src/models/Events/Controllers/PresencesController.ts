@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import slugify from "../../../../utils/slugify";
+import slugify from "../../../utils/slugify";
 import { prisma } from "../../../database/prismaClient";
 
 export default class PresencesController {
