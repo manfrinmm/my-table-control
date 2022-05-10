@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn ./src/server.ts",
     "build": "tsc",
     "start": "node ./dist/server.js",
-    "seed": "ts-node --transpile-only ./prisma/seeds/seed.ts"
+    "seed": "ts-node --transpile-only ./src/database/seeds/seed.ts",
+    "seed:build": "node ./dist/database/seeds/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^3.13.0",
