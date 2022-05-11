@@ -58,8 +58,9 @@ export default class ImportsController {
       const number = Number(mesa[0]);
       const capacity = Number(mesa[1][0].capacity);
       const convidados = [] as PersonType[];
+      const acompanhantes = [] as PersonType[];
 
-      const acompanhantes = mesa[1].map((person: any) => {
+      mesa[1].forEach((person: any) => {
         const convidadoAlreadyAdded = convidados.some(
           (convidado) => convidado.person_name === person.convidado,
         );
@@ -68,10 +69,12 @@ export default class ImportsController {
           convidados.push({ person_name: person.convidado, type: "Convidado" });
         }
 
-        return {
-          person_name: person.acompanhante,
-          type: "Acompanhante",
-        };
+        if (person.acompanhante) {
+          acompanhantes.push({
+            person_name: person.acompanhante,
+            type: "Acompanhante",
+          });
+        }
       });
 
       return {
