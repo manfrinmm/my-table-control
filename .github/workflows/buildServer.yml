@@ -38,8 +38,16 @@ jobs:
       - name: Install Dependencies
         run: yarn
 
-      - name: Delete old build
-        run: rm -r dist
+      - uses: appleboy/ssh-action@master
+        name: Delete old build
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          script: |
+            cd ~/apps/my-table-control/server
+            rm -r dist
 
       - name: Run Build
         run: yarn build
