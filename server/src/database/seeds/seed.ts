@@ -20,7 +20,6 @@ async function main() {
       name: "evento",
       state: "GO",
       when: new Date().toISOString(),
-      tables_quantity: 200,
     },
   });
 }

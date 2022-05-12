@@ -24,6 +24,7 @@ const upload = multer(uploadConfig.multer);
 // routes.post("/users", usersController.store);
 
 routes.post("/sessions", sessionsController.store);
+routes.get("/reports/presences", reportsController.store);
 
 routes.use(ensureAuthenticated);
 
@@ -45,7 +46,5 @@ routes.delete(
   "/events/:event_id/tables/:table_id/presences/:presence_id",
   presencesController.delete,
 );
-
-routes.get("/reports/presences", reportsController.store);
 
 export default routes;

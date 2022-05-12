@@ -83,7 +83,7 @@ export default function Presences() {
     setIsLoading(true);
     setPresences([]);
 
-    setIsTableSearch(Number(data.search) > 0);
+    setIsTableSearch(Number(data.search) >= 0);
 
     try {
       const response = await api.get(`/events/${event_id}/presences`, {

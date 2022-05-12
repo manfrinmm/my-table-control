@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import slugify from "../../../utils/slugify";
 import { prisma } from "../../../database/prismaClient";
+import stringNormalize from "../../../utils/stringNormalize";
 
 export default class TablesController {
   async index(req: Request, res: Response) {
@@ -64,7 +65,8 @@ export default class TablesController {
           createMany: {
             data: persons.map((person: any) => ({
               ...person,
-              person_name: slugify(person.person_name, " ", true),
+              person_name: stringNormalize(person.person_name),
+              person_slug: slugify(person.person_name),
             })),
           },
         },

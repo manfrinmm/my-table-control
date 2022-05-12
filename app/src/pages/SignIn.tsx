@@ -38,13 +38,7 @@ export default function SignIn() {
           method="POST"
         >
           <div className="rounded-md space-y-3">
-            <Input
-              label=""
-              name="email"
-              placeholder="E-mail"
-              type="email"
-              required
-            />
+            <Input label="" name="email" placeholder="Login" required />
 
             <Input
               label=""

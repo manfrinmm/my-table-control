@@ -8,6 +8,8 @@ import { TDocumentDefinitions } from "pdfmake/interfaces";
 
 export default class ReportsController {
   async store(req: Request, res: Response) {
+    const { order } = req.query;
+
     var fonts = {
       Helvetica: {
         normal: "Helvetica",
@@ -23,10 +25,19 @@ export default class ReportsController {
 
     const presences = await prisma.presence.findMany({
       orderBy: {
-        person_name: "asc",
+        ...(order === "name"
+          ? {
+              person_name: "asc",
+            }
+          : {
+              table: {
+                number: "asc",
+              },
+            }),
       },
       select: {
         person_name: true,
+        arrived_at: true,
         table: {
           select: {
             number: true,
@@ -76,7 +87,10 @@ export default class ReportsController {
                     text: presence.person_name,
                     bold: true,
                   },
-                  { text: "" },
+                  {
+                    text: presence.arrived_at?.toLocaleString("pt-BR") || "",
+                    alignment: "center",
+                  },
                 ];
               }),
             ],
@@ -98,12 +112,21 @@ export default class ReportsController {
       },
     };
 
-    var pdfDoc = printer.createPdfKitDocument(pdfContent);
-    pdfDoc.pipe(
-      fileSystem.createWriteStream(`${tmpFolder}/presencesReport2.pdf`),
-    );
-    pdfDoc.end();
+    const pdfName = order === "name" ? "nome" : "mesa";
 
-    return res.send();
+    var pdfDoc = printer.createPdfKitDocument(pdfContent);
+
+    await new Promise(async (resolve) => {
+      const writeStream = fileSystem.createWriteStream(
+        `${tmpFolder}/presencesReport-${pdfName}.pdf`,
+      );
+
+      pdfDoc.pipe(writeStream);
+      pdfDoc.end();
+
+      writeStream.on("close", resolve);
+    });
+
+    return res.download(`${tmpFolder}/presencesReport-${pdfName}.pdf`);
   }
 }

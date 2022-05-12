@@ -21,15 +21,14 @@ model User {
 }
 
 model Event {
-  id              Int      @id @default(autoincrement())
-  name            String
-  state           String
-  city            String
-  local           String
-  when            DateTime
-  tables_quantity Int
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String
+  state      String
+  city       String
+  local      String
+  when       DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   tables Table[]
   @@map("events")
@@ -52,6 +51,7 @@ model Table {
 model Presence {
   id          Int       @id @default(autoincrement())
   person_name String
+  person_slug String
   type        String
   table       Table     @relation(fields: [table_id], references: [id])
   table_id    Int

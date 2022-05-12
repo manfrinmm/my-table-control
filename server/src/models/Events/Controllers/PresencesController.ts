@@ -13,7 +13,7 @@ export default class PresencesController {
 
     var presences = [];
 
-    if (Number(search) > 0) {
+    if (Number(search) >= 0) {
       presences = await prisma.presence.findMany({
         where: {
           table: {
@@ -24,7 +24,7 @@ export default class PresencesController {
           arrived_at: "desc",
         },
         include: {
-          table: {},
+          table: true,
         },
       });
 
@@ -36,7 +36,7 @@ export default class PresencesController {
     } else {
       presences = await prisma.presence.findMany({
         where: {
-          person_name: {
+          person_slug: {
             contains: slugify(String(search)),
             mode: "insensitive",
           },
@@ -48,7 +48,7 @@ export default class PresencesController {
           arrived_at: "desc",
         },
         include: {
-          table: {},
+          table: true,
         },
       });
 

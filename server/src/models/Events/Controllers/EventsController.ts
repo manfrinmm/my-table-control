@@ -9,13 +9,7 @@ export default class EventsController {
   }
 
   async store(req: Request, res: Response) {
-    const { name, state, city, local, when, tables_quantity, tables_capacity } =
-      req.body;
-
-    const tables = new Array(tables_quantity).fill({}).map((_, index) => ({
-      capacity: tables_capacity,
-      number: index + 1,
-    }));
+    const { name, state, city, local, when } = req.body;
 
     const event = await prisma.event.create({
       data: {
@@ -24,12 +18,6 @@ export default class EventsController {
         city,
         local,
         when,
-        tables_quantity,
-        tables: {
-          createMany: {
-            data: tables,
-          },
-        },
       },
     });
 

@@ -2,9 +2,12 @@ import { Request, Response } from "express";
 import { prisma } from "../../../database/prismaClient";
 import fileSystem from "fs";
 import { parse as csvParse } from "csv-parse";
+import slugify from "../../../utils/slugify";
+import stringNormalize from "../../../utils/stringNormalize";
 
 type PersonType = {
   person_name: string;
+  person_slug: string;
   type: string;
 };
 
@@ -62,16 +65,22 @@ export default class ImportsController {
 
       mesa[1].forEach((person: any) => {
         const convidadoAlreadyAdded = convidados.some(
-          (convidado) => convidado.person_name === person.convidado,
+          (convidado) =>
+            convidado.person_name === stringNormalize(person.convidado),
         );
 
         if (!convidadoAlreadyAdded) {
-          convidados.push({ person_name: person.convidado, type: "Convidado" });
+          convidados.push({
+            person_name: stringNormalize(person.convidado),
+            person_slug: slugify(person.convidado),
+            type: "Convidado",
+          });
         }
 
         if (person.acompanhante) {
           acompanhantes.push({
-            person_name: person.acompanhante,
+            person_name: stringNormalize(person.acompanhante),
+            person_slug: slugify(person.acompanhante),
             type: "Acompanhante",
           });
         }
