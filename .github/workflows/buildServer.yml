@@ -38,6 +38,9 @@ jobs:
       - name: Install Dependencies
         run: yarn
 
+      - name: Delete old build
+        run: rm -r dist
+
       - name: Run Build
         run: yarn build
 
