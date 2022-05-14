@@ -38,6 +38,7 @@ export default class ReportsController {
       select: {
         person_name: true,
         arrived_at: true,
+        created_at: true,
         table: {
           select: {
             number: true,
@@ -46,9 +47,89 @@ export default class ReportsController {
       },
     });
 
+    // Quantidade de pessoas que foram
+    var arrivedPersons = 0;
+
+    // Qtd de pessoas cadastradas no evento
+    var createdPersons = 0;
+
+    // Qtd de pessoas cadastradas no evento
+    var arrivedAverage: any = 0;
+
+    presences.forEach((presence) => {
+      if (presence.arrived_at) {
+        arrivedPersons++;
+
+        arrivedAverage += presence.arrived_at.getTime();
+      }
+
+      const startHourEvent = new Date("2022-05-13 20:00");
+
+      if (startHourEvent < presence.created_at) {
+        createdPersons++;
+      }
+    });
+    console.log("Hora media: " + new Date(arrivedAverage / arrivedPersons));
+
     const padding = 6;
     const pdfContent: TDocumentDefinitions = {
       content: [
+        {
+          text: "Relatório de Presenças",
+          alignment: "center",
+          bold: true,
+          fontSize: 18,
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: [
+            "Total de convidados e acompanhantes: ",
+            {
+              text: String(presences.length),
+              bold: true,
+            },
+          ],
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: [
+            "Quantidade de pessoas cadastradas na recepção: ",
+            {
+              text: String(createdPersons),
+              bold: true,
+            },
+          ],
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: [
+            "Presenças confirmadas: ",
+            {
+              text: String(arrivedPersons),
+              bold: true,
+            },
+          ],
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: [
+            "Hora média de chegada: ",
+            {
+              text: String(
+                new Date(arrivedAverage / arrivedPersons).toLocaleTimeString(),
+              ),
+              bold: true,
+            },
+          ],
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: "Lista de Presenças",
+          alignment: "center",
+          bold: true,
+          fontSize: 18,
+          margin: [0, 1080, 0, 20],
+        },
         {
           layout: {
             paddingBottom: (i, node) => {
@@ -88,7 +169,7 @@ export default class ReportsController {
                     bold: true,
                   },
                   {
-                    text: presence.arrived_at?.toLocaleString("pt-BR") || "",
+                    text: presence.arrived_at?.toLocaleTimeString() || "",
                     alignment: "center",
                   },
                 ];
